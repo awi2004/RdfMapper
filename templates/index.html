@@ -1,0 +1,39 @@
+<head>
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+<script type="text/javascript">
+$(function() {
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("/autocomplete",{
+                q: request.term, // in flask, "q" will be the argument to look for using request.args
+            }, function(data) {
+                response(data.matching_results); // matching_results from jsonify
+            });
+        },
+        minLength: 2,
+        select: function(event, ui) {
+            alert( "You selected: " + ui.item.label );
+            console.log(ui.item.value);
+            $("#autocomplete").val(ui.item.label);
+            var getID=ui.item.value;
+            return false;
+
+        }
+    });
+})
+
+</script>
+</head>
+
+
+<body>
+    <div>
+    <form class="form-horizontal" method="post" action="/search">
+        <h3>Read Files</h3>
+        <input name="autocomplete"    type="text" id="autocomplete" class="form-control input-lg"/>
+    </form >
+    </div>
+</body>
