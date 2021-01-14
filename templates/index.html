@@ -1,9 +1,9 @@
 <head>
-<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
-<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+    <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 $(function() {
     $("#autocomplete").autocomplete({
         source:function(request, response) {
@@ -25,15 +25,16 @@ $(function() {
     });
 })
 
-</script>
+
+    </script>
 </head>
 
 
 <body>
-    <div>
+<div>
     <form class="form-horizontal" method="post" action="/search">
         <h3>Read Files</h3>
-        <input name="autocomplete"    type="text" id="autocomplete" class="form-control input-lg"/>
-    </form >
-    </div>
+        <input name="autocomplete" type="text" id="autocomplete" class="form-control input-lg"/>
+    </form>
+</div>
 </body>

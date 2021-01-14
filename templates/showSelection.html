@@ -1,5 +1,5 @@
 <head>
-<script type="text/javascript">
+    <script type="text/javascript">
 $(function() {
     $("#autocomplete").autocomplete({
         source:function(request, response) {
@@ -19,14 +19,16 @@ $(function() {
     });
 })
 
-</script>
+
+    </script>
 </head>
 
 <body>
 <div>
-<form class="form-horizontal" method="post" action="/showSelection">
-    <h3>Genes</h3>
-    <input name="autocomplete"  type="text" placeholder="Gene name" id="autocomplete" class="form-control input-lg"/ >
-</form>
+    <form class="form-horizontal" method="post" action="/showSelection">
+        <h3>Genes</h3>
+        <input name="autocomplete" type="text" placeholder="Gene name" id="autocomplete" class="form-control input-lg"/
+        >
+    </form>
 </div>
 </body>

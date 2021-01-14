@@ -1,57 +1,74 @@
-
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Title</title>
 
-<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
-<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script type="text/javascript">
-$(function() {
-    $("#autocomplete").autocomplete({
+    <script type="text/javascript">
+$(function () {
+    var autocompleteOptions = {
+        minLength: 2,
         source:function(request, response) {
             $.getJSON("/autocomplete",{
                 q: request.term, // in flask, "q" will be the argument to look for using request.args
             }, function(data) {
                 response(data.matching_results); // matching_results from jsonify
             });
-        },
-        minLength: 2,
-        select: function(event, ui) {
-            //alert( "You selected: " + ui.item.label );
-            //console.log(ui.item.value);
-            $("#autocomplete").val(ui.item.label);
-            var getID=ui.item.value;
-            return false;
-
         }
-    });
-})
+    };
 
-</script>
+    function addInput() {
+        var $input = $("<input>", {
+            name: "search",
+                "class": "searchInput"
+        });
+        $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
+    };
+    $("input.searchInput").autocomplete(autocompleteOptions);
+
+});
+
+
+    </script>
 </head>
 
 
 <body>
 
 
+<div>
 
-    <div>
+    <form id="myForm" name="myForm" class="form-horizontal" method="post" action="/search">
+        <h2>Data extracted from Team Mechanik experiment</h2>
+        <h3>Please select the checkbox and a labels using autosearch box by typing three keyowrds</h3>
 
-    <form class="form-horizontal" method="post" action="/search">
-        <h3>Read Files</h3>
-        <p> Csv Data </p>
 
-        <select name="dropdown">
         {% for each in dropdown_list %}
-          <option value="{{each}}">{{each}}</option>
-        {% endfor %}
-        </select>
+        <input type="checkbox" name="dropdown" value="{{each}}">
+        {% if loop.index in [10,11,12] %}
+        <label>line {{loop.index}} data description : </label>
+        <label>{{each}}</label>
 
-        <input name="autocomplete"    type="text" id="autocomplete" class="form-control input-lg"/>
+        {% else %}
+        <label>row {{loop.index}} value : </label>
+        <label>{{each}}</label>
+        <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"/>
+
+        {% endif %}
+
+
+        <br>
+
+
+        {% endfor %}
+
+        <p>After assigning label for each recorded experiment please select Submit button to create RDF triplets. </p>
         <input type="submit" value="Submit">
-    </form >
-    </div>
+    </form>
+</div>
 </body>
