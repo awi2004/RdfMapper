@@ -1,29 +1,37 @@
 @prefix ns1: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-"Gadolinium" ns1:hasIdentifer "Startdatum" ;
+"Crack" ns1:hasIdentifer "Startdatum" ;
     ns1:hasValue "13.05.2009 10:23" .
 
-"Regionofinterest" ns1:hasIdentifer "Probenbeschriftung" ;
+"Specimenrelatedquantity" ns1:hasIdentifer "Probenbeschriftung" ;
     ns1:hasValue "RX5163DV" .
 
-"column 11" ns1:hasIndex 0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6 ;
-    ns1:hasUnit "(%)",
-        "(MPa)",
-        "(kN)",
-        "(mm)",
-        "(sec)" ;
-    ns1:hasValue "Dehn-ung 2",
-        "Dehnung 1",
-        "Durchschnittliche Dehn-ung",
-        "Last",
-        "Traversenweg",
-        "Zeit",
-        "Zugspannung" .
+"column 0" ns1:hasIndex 0 ;
+    ns1:hasLabel "Zeit" ;
+    ns1:hasUnit "(sec)" .
+
+"column 1" ns1:hasIndex 1 ;
+    ns1:hasLabel "Traversenweg" ;
+    ns1:hasUnit "(mm)" .
+
+"column 2" ns1:hasIndex 2 ;
+    ns1:hasLabel "Last" ;
+    ns1:hasUnit "(kN)" .
+
+"column 3" ns1:hasIndex 3 ;
+    ns1:hasLabel "Dehnung 1" ;
+    ns1:hasUnit "(%)" .
+
+"column 4" ns1:hasIndex 4 ;
+    ns1:hasLabel "Dehn-ung 2" ;
+    ns1:hasUnit "(%)" .
+
+"column 5" ns1:hasIndex 5 ;
+    ns1:hasLabel "Durchschnittliche Dehn-ung" ;
+    ns1:hasUnit "(%)" .
+
+"column 6" ns1:hasIndex 6 ;
+    ns1:hasLabel "Zugspannung" ;
+    ns1:hasUnit "(MPa)" .
 

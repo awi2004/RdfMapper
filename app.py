@@ -1,3 +1,4 @@
+import flask_rdf
 from flask import Flask, render_template, request, Response, flash
 from rdflib.namespace import OWL, RDF, RDFS, FOAF
 from flask_rdf.flask import returns_rdf
@@ -100,7 +101,8 @@ def data():
             for row in range(0, len(csv_list)):
                 if row < 9:
                     dictOfWordsFromCSV[csv_list[row][0]] = [i for i in csv_list[row][1:] if i != '']
-                    dropdown_list.append(csv_list[row][0])
+                    # complete list
+                    dropdown_list.append([i for i in csv_list[row] if i != ''])
                 elif row == 9:
                     continue
                 else:
@@ -121,6 +123,7 @@ def data():
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
     search = request.args.get('q')
+    print(request.args.get('term'))
     # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
     # results = [mv[0] for mv in query.all()]
     print(str(search))
@@ -129,8 +132,7 @@ def autocomplete():
     return jsonify(matching_results=results)
 
 
-@app.route('/search', methods=['GET', 'POST'])
-@returns_rdf
+@app.route('/search', methods=['GET', 'POST'])  # @returns_rdf
 def search():
     # create graphs
     g_test = rdflib.Graph('IOMemory', rdflib.BNode())
@@ -141,9 +143,9 @@ def search():
     gene = []
     for i in range(0, len(class_labels)):
         print(class_labels_dict.get(str(request.form.get("search" + str(i + 1)))))
-        gene.append((request.form.get("search" + str(i + 1)), class_labels[i]))
-        g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
-               rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
+        #gene.append((request.form.get("search" + str(i + 1)), class_labels[i]))
+        #g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
+        #       rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
         if i < 2:
             g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
                         rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
@@ -158,11 +160,11 @@ def search():
                         rdflib.Literal(class_labels[i])))
 
     for j in range(7):
-        g_test.add((rdflib.Literal('column 11' + str()), OWL.hasValue,
+        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
                     rdflib.Literal(dictOfWordsHeaders[j][1])))
-        g_test.add((rdflib.Literal('column 11'), OWL.hasIndex,
+        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasIndex,
                     rdflib.Literal(dictOfWordsHeaders[j][0])))
-        g_test.add((rdflib.Literal('column 11'), OWL.hasUnit,
+        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasUnit,
                     rdflib.Literal(dictOfWordsHeaders[j][2])))
 
     print('----------graph value----------------')
@@ -192,7 +194,7 @@ def search():
     # save file as
     g_test.serialize("./test.ttl", format="turtle")
     # flash('RDF file successfully created')
-    return g_test
+    return jsonify(g_test.serialize(format="turtle").decode())
 
 
 @app.route('/showSelection', methods=['GET', 'POST'])
@@ -200,7 +202,7 @@ def showSelection():
     csv_values = {'prob': 21}
     gene = request.form.get('autocomplete')  # Returns none if not found in request
     gene = str(gene)
-    print('changss')
+    print('change')
     print(gene, csv_values.get('prob'))
     flash('RDF file successfully created')
     return jsonify(gene, csv_values.get('prob'))

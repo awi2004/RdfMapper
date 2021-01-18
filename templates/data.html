@@ -34,6 +34,7 @@ $(function () {
 });
 
 
+
     </script>
 </head>
 
@@ -49,15 +50,17 @@ $(function () {
 
 
         {% for each in dropdown_list %}
-        <input type="checkbox" name="dropdown" value="{{each}}">
+        <input type="checkbox" name="dropdown" value="{{each[0]}}">
         {% if loop.index in [10,11,12] %}
         <label>line {{loop.index}} data description : </label>
         <label>{{each}}</label>
 
         {% else %}
-        <label>row {{loop.index}} value : </label>
+        <label>line {{loop.index}} value : </label>
+        <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
+               placeholder="assign a label"/>
         <label>{{each}}</label>
-        <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"/>
+
 
         {% endif %}
 
