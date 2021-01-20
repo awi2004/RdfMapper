@@ -91,7 +91,7 @@ def data():
         file = request.form['upload-file']
         no_of_lines = int(request.form['no_of_rows_csv'])
         print(no_of_lines)
-        # pprint(file)
+        # pprint(file) a
         # final_list= read_turte()
 
         with open(file, newline='') as fin:
@@ -115,7 +115,13 @@ def data():
 
         print(dictOfWordsHeaders)
         print(dropdown_list)
-        return render_template('data.html', dropdown_list=dropdown_list)
+
+        # define columns for datas
+        columns = ["Zeit", "Traversenweg", "Last", "Dehnung 1", "Dehn-ung 2", "Durchschnittliche Dehn-ung",
+                   "Zugspannung"]
+        preview_table = pd.DataFrame(csv_whole_list[12:22], columns=columns)
+        return render_template('data.html', dropdown_list=dropdown_list, tables=[preview_table.to_html(classes='data')],
+                               titles=columns)
         # return render_template('data.html', tables=[data_filtered[:no_of_lines].to_html(classes='data')],
         #                   titles=data_filtered.columns.values)# data=data_filtered[:no_of_lines].to_dict()
 
@@ -143,8 +149,8 @@ def search():
     gene = []
     for i in range(0, len(class_labels)):
         print(class_labels_dict.get(str(request.form.get("search" + str(i + 1)))))
-        #gene.append((request.form.get("search" + str(i + 1)), class_labels[i]))
-        #g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
+        # gene.append((request.form.get("search" + str(i + 1)), class_labels[i]))
+        # g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
         #       rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
         if i < 2:
             g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,

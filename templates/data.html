@@ -35,6 +35,8 @@ $(function () {
 
 
 
+
+
     </script>
 </head>
 
@@ -45,8 +47,8 @@ $(function () {
 <div>
 
     <form id="myForm" name="myForm" class="form-horizontal" method="post" action="/search">
-        <h2>Data extracted from Team Mechanik experiment</h2>
-        <h3>Please select the checkbox and a labels using autosearch box by typing three keyowrds</h3>
+        <h2>Headers of the experimental data from Team Mechanik experiment</h2>
+        <h3>Please select the checkbox and a assign a label to the header.</h3>
 
 
         {% for each in dropdown_list %}
@@ -59,15 +61,20 @@ $(function () {
         <label>line {{loop.index}} value : </label>
         <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
                placeholder="assign a label"/>
-        <label>{{each}}</label>
+        {% for i in each %}
+        <label>{{i}}</label>
+        {% endfor %}
 
 
         {% endif %}
-
-
         <br>
+        {% endfor %}
 
 
+
+        {% for table in tables %}
+        <p>Data preview </p>
+        {{ table|safe }}
         {% endfor %}
 
         <p>After assigning label for each recorded experiment please select Submit button to create RDF triplets. </p>
