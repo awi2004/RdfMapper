@@ -1,18 +1,17 @@
 @prefix ns1: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-"Mass" ns1:hasIdentifer "Querschnitt" ;
-    ns1:hasUnit "mm^2" ;
-    ns1:hasValue "78,658" .
+"Iodine" ns1:hasIdentifer "Länge",
+        "Querschnitt" ;
+    ns1:hasUnit "mm",
+        "mm^2" ;
+    ns1:hasValue "50",
+        "78,658" .
 
-"Materialnamingconventionother" ns1:hasIdentifer "Startdatum" ;
+"Materialmesostructure" ns1:hasIdentifer "Startdatum" ;
     ns1:hasValue "13.05.2009 10:23" .
 
-"Solution" ns1:hasIdentifer "Länge" ;
-    ns1:hasUnit "mm" ;
-    ns1:hasValue "50" .
-
-"Specimen" ns1:hasIdentifer "Probenbeschriftung" ;
+"Objectlens" ns1:hasIdentifer "Probenbeschriftung" ;
     ns1:hasValue "RX5163DV" .
 
 "column 0" ns1:hasIndex 0 ;

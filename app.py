@@ -13,6 +13,7 @@ from rdflib import ConjunctiveGraph, URIRef, RDFS, Literal
 from flask_table import Table, Col
 from flask import send_file
 from wtforms import TextField, Form
+import random
 
 app = Flask(__name__)
 # app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -25,6 +26,12 @@ listOfWordsHeaders = []
 
 # define graph
 g = rdflib.Graph()
+
+# set up a custom formatter to return turtle in text/plain to browsers
+custom_formatter = flask_rdf.FormatSelector()
+custom_formatter.wildcard_mimetype = 'text/plain'
+custom_formatter.add_format('text/plain', 'turtle')
+custom_decorator = flask_rdf.flask.Decorator(custom_formatter)
 
 
 class SearchForm(Form):
@@ -138,7 +145,9 @@ def autocomplete():
     return jsonify(matching_results=results)
 
 
-@app.route('/search', methods=['GET', 'POST'])  # @returns_rdf
+@app.route('/search', methods=['GET', 'POST'])  #
+@returns_rdf
+@custom_decorator
 def search():
     # create graphs
     g_test = rdflib.Graph('IOMemory', rdflib.BNode())
@@ -200,7 +209,7 @@ def search():
     # save file as
     g_test.serialize("./test.ttl", format="turtle")
     # flash('RDF file successfully created')
-    return jsonify(g_test.serialize(format="turtle").decode())
+    return g_test  # jsonify(g_test.serialize(format="turtle").decode())
 
 
 @app.route('/showSelection', methods=['GET', 'POST'])
