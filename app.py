@@ -71,8 +71,9 @@ def read_turte():
     # print(class_labels_dict.get('DepthOfCut'))
     rdf_df = pd.DataFrame(labels, columns=['class(subject)', 'label(literals)'])
 
-    return render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')],
-                           titles=rdf_df.columns.values)
+    return render_template('index_old.html')
+    #render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')],
+    #                      titles=rdf_df.columns.values)
     # jsonify(final_list[0:no_of_rows])
 
 
@@ -90,7 +91,7 @@ def file_read():
 def data():
     """
     Read csv file.
-    :return: data in CSV file.
+    :return: data in CSV file..
     """
 
     dropdown_list = []
@@ -140,7 +141,7 @@ def autocomplete():
     # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
     # results = [mv[0] for mv in query.all()]
     print(str(search))
-    results = class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
+    results =  class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
 
     return jsonify(matching_results=results)
 
