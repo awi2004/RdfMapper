@@ -70,9 +70,9 @@ def read_turte():
     print(class_labels_dict.get('Computertomograph'))
     # print(class_labels_dict.get('DepthOfCut'))
     rdf_df = pd.DataFrame(labels, columns=['class(subject)', 'label(literals)'])
-
-    return render_template('index_old.html')
-    #render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')],
+    alert_value = 1 # for alert.
+    return render_template('index_old.html', alert_value = alert_value)
+    # render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')],
     #                      titles=rdf_df.columns.values)
     # jsonify(final_list[0:no_of_rows])
 
@@ -141,7 +141,7 @@ def autocomplete():
     # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
     # results = [mv[0] for mv in query.all()]
     print(str(search))
-    results =  class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
+    results = class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
 
     return jsonify(matching_results=results)
 
@@ -151,7 +151,7 @@ def autocomplete():
 @custom_decorator
 def search():
     # create graphs
-    g_test = rdflib.Graph('IOMemory', rdflib.BNode())
+    csv_graph = rdflib.Graph('IOMemory', rdflib.BNode())
     print('in search method ')
     class_labels = request.form.getlist('dropdown')
     print((class_labels))
@@ -163,29 +163,29 @@ def search():
         # g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
         #       rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
         if i < 2:
-            g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
                         rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
-            g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
                         rdflib.Literal(class_labels[i])))
         if i >= 2 and i < 9:
-            g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
                         rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
-            g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasUnit,
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasUnit,
                         rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[1])))
-            g_test.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
                         rdflib.Literal(class_labels[i])))
 
     for j in range(7):
-        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
+        csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
                     rdflib.Literal(dictOfWordsHeaders[j][1])))
-        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasIndex,
+        csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasIndex,
                     rdflib.Literal(dictOfWordsHeaders[j][0])))
-        g_test.add((rdflib.Literal('column ' + str(j)), OWL.hasUnit,
+        csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasUnit,
                     rdflib.Literal(dictOfWordsHeaders[j][2])))
 
     print('----------graph value----------------')
     # The turtle format has the purpose of being more readable for humans.
-    print(g_test.serialize(format="turtle").decode())
+    print(csv_graph.serialize(format="turtle").decode())
     print(rdflib.Literal(request.form.get("search" + str(0))))
     # for s, p, o in g:
     #   print(s, p, o)
@@ -208,9 +208,9 @@ def search():
     plt.savefig('./rdf_triple.png')
 
     # save file as
-    g_test.serialize("./test.ttl", format="turtle")
+    csv_graph.serialize("./test.ttl", format="turtle")
     # flash('RDF file successfully created')
-    return g_test  # jsonify(g_test.serialize(format="turtle").decode())
+    return csv_graph  # jsonify(g_test.serialize(format="turtle").decode())
 
 
 @app.route('/showSelection', methods=['GET', 'POST'])

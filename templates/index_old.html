@@ -1,9 +1,10 @@
 <html>
 <head>
+
     <style>
-h1 {text-align: center;}
-p {text-align: center;}
-div {text-align: center;}
+            h1 {text-align: center;}
+            p {text-align: center;}
+            div {text-align: center;}
 
     </style>
 </head>
@@ -15,10 +16,18 @@ div {text-align: center;}
     <input type="submit" name="" value="Submit">
 </form>
 
+{% if alert_value == 1 %}
+<p>Ontology read done.</p>
+{% endif %}
 <form class="" action="/data" method="post">
     <h2>Read CSV</h2>
     <input type="file" name="upload-file">
     <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
     <input type="submit" name="" value="Show">
 </form>
+
+
+
+
+
 
