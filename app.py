@@ -13,10 +13,13 @@ from rdflib import ConjunctiveGraph, URIRef, RDFS, Literal
 from flask_table import Table, Col
 from flask import send_file
 from wtforms import TextField, Form
-import random
+from fast_autocomplete import AutoComplete
 
 app = Flask(__name__)
-# app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+## app.secret_key = b'_5#y2L"F4Q8z\n\xec]/''
+
+#autocomplete dict
+autocmplete_label_dict ={}
 
 class_labels = []
 class_labels_dict = {}
@@ -62,6 +65,7 @@ def read_turte():
     #     final_list.append((s, g.label(s)))
     for s in result.subjects(predicate=rdfType, object=owlClass):
         class_labels.append(result.label(s).title())
+        autocmplete_label_dict[result.label(s).title()] = {}
         final_list.append((s.title(), result.label(s).title()))
         class_labels_dict[result.label(s).title()] = s.title()
     labels = list(set([i for i in final_list if len(i[1]) > 0]))
@@ -70,10 +74,9 @@ def read_turte():
     print(class_labels_dict.get('Computertomograph'))
     # print(class_labels_dict.get('DepthOfCut'))
     rdf_df = pd.DataFrame(labels, columns=['class(subject)', 'label(literals)'])
-    alert_value = 1 # for alert.
-    return render_template('index_old.html', alert_value = alert_value)
-    # render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')],
-    #                      titles=rdf_df.columns.values)
+    alert_value = 1  # for alert.
+    return render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')], titles=rdf_df.columns.values)
+    # render_template('index_old.html', alert_value=alert_value)
     # jsonify(final_list[0:no_of_rows])
 
 
@@ -140,8 +143,18 @@ def autocomplete():
     print(request.args.get('term'))
     # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
     # results = [mv[0] for mv in query.all()]
+    print('search is ----------')
     print(str(search))
-    results = class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
+    autocomplete = AutoComplete(words=autocmplete_label_dict)
+    print(autocomplete.search(word=str(search), max_cost=3, size=3))
+    t = autocomplete.search(word=str(search), max_cost=3, size=6)
+
+    flatten = [item for sublist in t for item in sublist]
+    print(flatten)
+
+    #results = autocomplete.search(word=str(search), max_cost=3, size=3) #class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
+    results = flatten
+    print(results)
 
     return jsonify(matching_results=results)
 
@@ -150,7 +163,7 @@ def autocomplete():
 @returns_rdf
 @custom_decorator
 def search():
-    # create graphs
+    # create graph
     csv_graph = rdflib.Graph('IOMemory', rdflib.BNode())
     print('in search method ')
     class_labels = request.form.getlist('dropdown')
@@ -164,24 +177,24 @@ def search():
         #       rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
         if i < 2:
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
-                        rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
-            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
-                        rdflib.Literal(class_labels[i])))
+                           rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifier,
+                           rdflib.Literal(class_labels[i])))
         if i >= 2 and i < 9:
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
-                        rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
+                           rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasUnit,
-                        rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[1])))
-            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifer,
-                        rdflib.Literal(class_labels[i])))
+                           rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[1])))
+            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifier,
+                           rdflib.Literal(class_labels[i])))
 
     for j in range(7):
         csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
-                    rdflib.Literal(dictOfWordsHeaders[j][1])))
+                       rdflib.Literal(dictOfWordsHeaders[j][1])))
         csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasIndex,
-                    rdflib.Literal(dictOfWordsHeaders[j][0])))
+                       rdflib.Literal(dictOfWordsHeaders[j][0])))
         csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasUnit,
-                    rdflib.Literal(dictOfWordsHeaders[j][2])))
+                       rdflib.Literal(dictOfWordsHeaders[j][2])))
 
     print('----------graph value----------------')
     # The turtle format has the purpose of being more readable for humans.
@@ -199,7 +212,7 @@ def search():
     print(ss)
     print(selectValue, gene)
 
-    G = rdflib_to_networkx_multidigraph(g_test)
+    G = rdflib_to_networkx_multidigraph(csv_graph)
     # Plot Networkx instance of RDF Graph
     pos = nx.spring_layout(G, scale=2)
     edge_labels = nx.get_edge_attributes(G, 'r')
@@ -207,7 +220,7 @@ def search():
     nx.draw(G, with_labels=True)
     plt.savefig('./rdf_triple.png')
 
-    # save file as
+    # save file
     csv_graph.serialize("./test.ttl", format="turtle")
     # flash('RDF file successfully created')
     return csv_graph  # jsonify(g_test.serialize(format="turtle").decode())

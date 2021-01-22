@@ -9,6 +9,8 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+
+
     <script type="text/javascript">
 $(function () {
     var autocompleteOptions = {
@@ -25,19 +27,19 @@ $(function () {
     function addInput() {
         var $input = $("<input>", {
             name: "search",
-                "class": "searchInput"
+            "class": "searchInput"
         });
         $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
     };
+    console.log($("input.searchInput"))
     $("input.searchInput").autocomplete(autocompleteOptions);
 
 });
 
 
+</script>
 
 
-
-    </script>
 </head>
 
 
@@ -61,19 +63,24 @@ $(function () {
         <label>line {{loop.index}} value : </label>
         <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
                placeholder="assign a label"/>
-        {% for i in each %}
-        <label>{{i}}</label>
-        {% endfor %}
-
+        <input style="margin:2px;" id = "basics"/>
 
         {% endif %}
+        <br>
+
+        {% endfor %}
+        <h2>Data preview </h2>
+        {% for each in dropdown_list %}
+        {% for i in each %}
+        <label>	&nbsp; {{i}}</label>
+        {% endfor %}
         <br>
         {% endfor %}
 
 
 
         {% for table in tables %}
-        <h2>Data preview </h2>
+
         {{ table|safe }}
         {% endfor %}
 
