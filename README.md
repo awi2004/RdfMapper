@@ -5,5 +5,5 @@ This involves below steps:
 
 The tool is written in Python and it uses Flask as backend & frontend services.
 The tool has following rest end points:
-a. ./file_read : to read the  ontology file(turtle file) and csv file(experimental data)
-b. ./data : to assign class labels 
+    a. ./file_read : to read the  ontology file(turtle file) and csv file(experimental data)
+    b. ./data : to assign class labels 
