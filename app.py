@@ -9,17 +9,39 @@ import csv
 from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 import networkx as nx
 import matplotlib.pyplot as plt
+import document
 from rdflib import ConjunctiveGraph, URIRef, RDFS, Literal
 from flask_table import Table, Col
 from flask import send_file
+from rdflib.namespace import RDF, XSD, NamespaceManager
+from rdflib import BNode, Literal, Namespace, Graph
 from wtforms import TextField, Form
 from fast_autocomplete import AutoComplete
 
+from collections import defaultdict
+import io
+import re
+
+
+def regex(str):
+    # check ma
+    final_filter_data = []
+    test = "".join(re.split("[^a-z A-Z 0-9 -|,| ()| .| ;| ^/ ^%]*", str)).split(' ')
+    # re.split("\s\s|;|\t", test)
+    # print(test)
+    filter_data = [i for i in test if i != ""]
+    # print(re.split("\s\s|;|\t", test))
+    return [i for i in test if i != ""]
+
+
 app = Flask(__name__)
+# app env list
+app.jinja_env.filters['regex'] = regex
+
 ## app.secret_key = b'_5#y2L"F4Q8z\n\xec]/''
 
-#autocomplete dict
-autocmplete_label_dict ={}
+# autocomplete dict
+autocmplete_label_dict = {}
 
 class_labels = []
 class_labels_dict = {}
@@ -96,7 +118,7 @@ def data():
     Read csv file.
     :return: data in CSV file..
     """
-
+    # counter_first_null = 0
     dropdown_list = []
     if request.method == 'POST':
         file = request.form['upload-file']
@@ -108,18 +130,28 @@ def data():
         with open(file, newline='') as fin:
             reader = csv.reader(fin, delimiter=";")
             csv_whole_list = list(reader)
-            csv_list = csv_whole_list[:no_of_lines]
-            for row in range(0, len(csv_list)):
-                if row < 9:
-                    dictOfWordsFromCSV[csv_list[row][0]] = [i for i in csv_list[row][1:] if i != '']
-                    # complete list
-                    dropdown_list.append([i for i in csv_list[row] if i != ''])
-                elif row == 9:
-                    continue
+            # csv_list = csv_whole_list[:no_of_lines]
+            for row in range(0, len(csv_whole_list)):
+                print(row)
+                # counter_first_null += 1
+                if csv_whole_list[row][0] == '':
+                    print(row)
+                    break
                 else:
-                    dropdown_list.append(csv_list[row])
-            print('le')
-            listOfWordsHeaders = csv_whole_list[10:12]
+                    if row < no_of_lines:
+                        dictOfWordsFromCSV[csv_whole_list[row][0]] = [i for i in csv_whole_list[row][1:] if i != '']
+                        # complete list
+                        dropdown_list.append([i for i in csv_whole_list[row] if i != ''])
+                # if row[0] != '':  # < 9
+                #     dictOfWordsFromCSV[csv_list[row][0]] = [i for i in csv_list[row][1:] if i != '']
+                #     # complete list
+                #     dropdown_list.append([i for i in csv_list[row] if i != ''])
+                # elif row == 9:
+                #     continue
+                # else:
+                #     dropdown_list.append(csv_list[row])
+            print('you are in data ')
+            listOfWordsHeaders = csv_whole_list[row + 1:row + 3]  # 10:12
             if len(listOfWordsHeaders) > 0:
                 for i in range(7):
                     dictOfWordsHeaders.append((i, listOfWordsHeaders[0][i], listOfWordsHeaders[1][i]))
@@ -130,7 +162,7 @@ def data():
         # define columns for datas
         columns = ["Zeit", "Traversenweg", "Last", "Dehnung 1", "Dehn-ung 2", "Durchschnittliche Dehn-ung",
                    "Zugspannung"]
-        preview_table = pd.DataFrame(csv_whole_list[12:22], columns=columns)
+        preview_table = pd.DataFrame(csv_whole_list[row + 3:22], columns=columns)
         return render_template('data.html', dropdown_list=dropdown_list, tables=[preview_table.to_html(classes='data')],
                                titles=columns)
         # return render_template('data.html', tables=[data_filtered[:no_of_lines].to_html(classes='data')],
@@ -143,7 +175,7 @@ def autocomplete():
     print(request.args.get('term'))
     # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
     # results = [mv[0] for mv in query.all()]
-    print('search is ----------')
+    print('search is ---------')
     print(str(search))
     autocomplete = AutoComplete(words=autocmplete_label_dict)
     print(autocomplete.search(word=str(search), max_cost=3, size=3))
@@ -152,7 +184,7 @@ def autocomplete():
     flatten = [item for sublist in t for item in sublist]
     print(flatten)
 
-    #results = autocomplete.search(word=str(search), max_cost=3, size=3) #class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
+    # results = autocomplete.search(word=str(search), max_cost=3, size=3) #class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
     results = flatten
     print(results)
 
@@ -163,9 +195,15 @@ def autocomplete():
 @returns_rdf
 @custom_decorator
 def search():
+    # test namespace
+    BS = rdflib.Namespace('https://w3id.org/def/basicsemantics-owl#')
+    # test graph
+    csv_test_graph = rdflib.Graph('IOMemory', rdflib.BNode())
     # create graph
     csv_graph = rdflib.Graph('IOMemory', rdflib.BNode())
-    print('in search method ')
+    print(request.data)
+    print('in search method ---')
+    print(str(request.form.get("searchx1")))
     class_labels = request.form.getlist('dropdown')
     print((class_labels))
     print(dictOfWordsFromCSV.get(class_labels[0]))
@@ -176,10 +214,12 @@ def search():
         # g.add((rdflib.URIRef(class_labels_dict.get(str(request.form.get("search" + str(i + 1))))),
         #       rdflib.Literal(class_labels[i]), rdflib.Literal(request.form.get("search" + str(i + 1)))))
         if i < 2:
-            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
-                           rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
-            csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifier,
-                           rdflib.Literal(class_labels[i])))
+            csv_graph.add(
+                (rdflib.Literal(request.form.get("search" + str(i + 1))), BS[request.form.get("prop" + str(i + 1))],
+                 rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
+            csv_graph.add(
+                (rdflib.Literal(request.form.get("search" + str(i + 1))), BS[request.form.get("prop" + str(i + 1))],
+                 rdflib.Literal(class_labels[i])))
         if i >= 2 and i < 9:
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasValue,
                            rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[0])))
@@ -187,6 +227,13 @@ def search():
                            rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[1])))
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifier,
                            rdflib.Literal(class_labels[i])))
+        # owl = OWL.str(request.form.get("prop1"))
+
+        # test graph add data request.form.get("search" + str(i + 1))
+        # csv_test_graph.add((rdflib.URIRef(request.form.get("search" + str(i + 1))),
+        #                     BS[request.form.get("prop" + str(i + 1))],
+        #                     rdflib.Literal(request.form.get("searchx" + str(
+        #                         i + 1)))))  # rdflib.RDF.type(str(request.form.get("prop" + str(i + 1))))
 
     for j in range(7):
         csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
@@ -197,6 +244,7 @@ def search():
                        rdflib.Literal(dictOfWordsHeaders[j][2])))
 
     print('----------graph value----------------')
+    print(csv_test_graph.serialize(format="turtle").decode())
     # The turtle format has the purpose of being more readable for humans.
     print(csv_graph.serialize(format="turtle").decode())
     print(rdflib.Literal(request.form.get("search" + str(0))))
@@ -227,14 +275,69 @@ def search():
 
 
 @app.route('/showSelection', methods=['GET', 'POST'])
+@returns_rdf
+@custom_decorator
 def showSelection():
-    csv_values = {'prob': 21}
-    gene = request.form.get('autocomplete')  # Returns none if not found in request
-    gene = str(gene)
-    print('change')
-    print(gene, csv_values.get('prob'))
-    flash('RDF file successfully created')
-    return jsonify(gene, csv_values.get('prob'))
+    # flash('RDF file successfully created')
+    BMWD = Namespace('https://www.materials.fraunhofer.de/ontologies/BWMD_ontology/mid#')
+    UNIT = Namespace('http://qudt.org/2.1/vocab/unit/')
+    BS = Namespace('https://w3id.org/def/basicsemantics-owl#')
+
+    g = Graph()
+    g.namespace_manager = NamespaceManager(Graph())
+    g.namespace_manager.bind('unit', UNIT)
+    g.namespace_manager.bind('bs', BS)
+    g.namespace_manager.bind('bmwd', BMWD)
+
+    print('in showSelection method changed---')
+    print(request.form.getlist('dropdown'))
+    print(str(request.form.get("search1")))
+    # test=request.form.get('dropdown1')
+    for i in range(0, 30):
+        test = request.form.get('dropdown' + str(i))
+        if test:
+            # filter_data = re.split("\s\s|;|\t", test)
+            filter_data = [i for i in re.split("\s\s|;|\t", test) if i != '']
+            print(filter_data)
+            if len(filter_data) <= 2:
+                g.add((Literal(request.form.get("search" + str(i))), BS['hasValue'], Literal(filter_data[-1])))
+            else:
+                if re.findall('[0-9]+', filter_data[1]):
+                    g.add((BMWD[request.form.get("search" + str(i))], UNIT['hasUnit'], Literal(filter_data[2])))
+                    g.add((BMWD[request.form.get("search" + str(i))], BS['hasValue'], Literal(filter_data[1])))
+                else:
+                    g.add((BMWD[request.form.get("search" + str(i))], BS['hasValue'], Literal(filter_data[2])))
+                    g.add((BMWD[request.form.get("search" + str(i))], UNIT['hasUnit'], Literal(filter_data[1])))
+
+            # print(len([i for i in b if i != '']))
+            print(str(request.form.get("search" + str(i))))
+
+    # print("b--------------------------")
+    # print([i for i in b if i!=''])
+    # print(request.form.get('label1'))####
+    # print(request.form['dropdown1'])
+    # print(request.form['dropdown2'])
+    # print((request.data))
+
+    # request
+    return g
+
+
+@app.route('/test_read', methods=['GET', 'POST'])
+def test_read():
+    # file to reads
+    # fn = r'C:/Users/kawanish/Documents/excelupload/RX5163DV.csv'
+    # fn = r'C:/Users/kawanish/Documents/excelupload/RX5163DV.lis'
+    file = request.form['upload-file']
+    no_of_lines = int(request.form['no_of_rows_csv'])
+    print(no_of_lines)
+    file_data = []
+    with open(file) as f:
+        d = defaultdict(list)
+        for line in f:
+            file_data.append(line)
+    # some thing
+    return render_template('regex_file.html', data=file_data[:30])
 
 
 if __name__ == '__main__':

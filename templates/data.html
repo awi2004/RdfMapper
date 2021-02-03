@@ -10,7 +10,6 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
-
     <script type="text/javascript">
 $(function () {
     var autocompleteOptions = {
@@ -37,7 +36,8 @@ $(function () {
 });
 
 
-</script>
+
+    </script>
 
 
 </head>
@@ -55,29 +55,37 @@ $(function () {
 
         {% for each in dropdown_list %}
         <input type="checkbox" name="dropdown" value="{{each[0]}}">
-        {% if loop.index in [10,11,12] %}
-        <label>line {{loop.index}} data description : </label>
-        <label>{{each}}</label>
 
-        {% else %}
         <label>line {{loop.index}} value : </label>
         <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
-               placeholder="assign a label"/>
-        <input style="margin:2px;" id = "basics"/>
+               placeholder="choose a subject"/>
+        <input style="margin:2px;" name="{{ 'prop' + loop.index|string }}" class="searchInput"
+               placeholder="assign a property"/>
+        <!--<input style="margin:2px;" name="{{ 'search' + 'x' + loop.index|string }}" class="searchInput"
+               placeholder="assign a label"/>-->
 
-        {% endif %}
+
+        {% for j in each %}
+        <label> &nbsp; {{j}}</label>
+        {% endfor %}
+        <br>
+
+        <!--        <input style="margin:2px;" id = "basics"/>-->
+
+
         <br>
 
         {% endfor %}
+
         <h2>Data preview </h2>
         {% for each in dropdown_list %}
         {% for i in each %}
-        <label>	&nbsp; {{i}}</label>
+        <label> &nbsp; {{i}}</label>
         {% endfor %}
         <br>
         {% endfor %}
 
-
+        <br>
 
         {% for table in tables %}
 

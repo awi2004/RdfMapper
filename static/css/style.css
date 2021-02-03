@@ -1,0 +1,11 @@
+.open {
+  visibility: visible;
+}
+
+.close {
+  visibility: hidden;
+}
+
+.success {
+  display: block !important;
+}

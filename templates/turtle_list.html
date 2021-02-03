@@ -5,10 +5,13 @@
     <title>Title</title>
 </head>
 <body>
+<div>
 
-{% for table in tables %}
-{{titles[loop.index]}}
-{{ table|safe }}
-{% endfor %}
+    {% for table in tables %}
+    {{titles[loop.index]}}
+    {{ table|safe }}
+    {% endfor %}
+
+
 </body>
 </html>

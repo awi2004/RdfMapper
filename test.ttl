@@ -1,11 +1,6 @@
 @prefix ns1: <http://www.w3.org/2002/07/owl#> .
+@prefix ns2: <https://w3id.org/def/basicsemantics-owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-"Object Aggregate" ns1:hasIdentifier "Probenbeschriftung" ;
-    ns1:hasValue "RX5163DV" .
-
-"Shrinkageadjustment" ns1:hasIdentifier "Startdatum" ;
-    ns1:hasValue "13.05.2009 10:23" .
 
 "column 0" ns1:hasIndex 0 ;
     ns1:hasLabel "Zeit" ;
@@ -34,4 +29,7 @@
 "column 6" ns1:hasIndex 6 ;
     ns1:hasLabel "Zugspannung" ;
     ns1:hasUnit "(MPa)" .
+
+"mercury" ns2:berylium "Probenbeschriftung",
+        "RX5163DV" .
 
