@@ -24,13 +24,9 @@ import re
 
 
 def regex(str):
-    # check ma
-    final_filter_data = []
+    # use regex to split
     test = "".join(re.split("[^a-z A-Z 0-9 -|,| ()| .| ;| ^/ ^%]*", str)).split(' ')
-    # re.split("\s\s|;|\t", test)
-    # print(test)
-    filter_data = [i for i in test if i != ""]
-    # print(re.split("\s\s|;|\t", test))
+
     return [i for i in test if i != ""]
 
 
@@ -99,7 +95,6 @@ def read_turte():
     alert_value = 1  # for alert.
     return render_template('turtle_list.html', tables=[rdf_df.to_html(classes='data')], titles=rdf_df.columns.values)
     # render_template('index_old.html', alert_value=alert_value)
-    # jsonify(final_list[0:no_of_rows])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -165,16 +160,12 @@ def data():
         preview_table = pd.DataFrame(csv_whole_list[row + 3:22], columns=columns)
         return render_template('data.html', dropdown_list=dropdown_list, tables=[preview_table.to_html(classes='data')],
                                titles=columns)
-        # return render_template('data.html', tables=[data_filtered[:no_of_lines].to_html(classes='data')],
-        #                   titles=data_filtered.columns.values)# data=data_filtered[:no_of_lines].to_dict()
 
 
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
     search = request.args.get('q')
     print(request.args.get('term'))
-    # query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
-    # results = [mv[0] for mv in query.all()]
     print('search is ---------')
     print(str(search))
     autocomplete = AutoComplete(words=autocmplete_label_dict)
@@ -312,22 +303,12 @@ def showSelection():
             # print(len([i for i in b if i != '']))
             print(str(request.form.get("search" + str(i))))
 
-    # print("b--------------------------")
-    # print([i for i in b if i!=''])
-    # print(request.form.get('label1'))####
-    # print(request.form['dropdown1'])
-    # print(request.form['dropdown2'])
-    # print((request.data))
-
-    # request
     return g
 
 
 @app.route('/test_read', methods=['GET', 'POST'])
 def test_read():
     # file to reads
-    # fn = r'C:/Users/kawanish/Documents/excelupload/RX5163DV.csv'
-    # fn = r'C:/Users/kawanish/Documents/excelupload/RX5163DV.lis'
     file = request.form['upload-file']
     no_of_lines = int(request.form['no_of_rows_csv'])
     print(no_of_lines)
