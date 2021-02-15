@@ -6,6 +6,7 @@ import rdflib
 from flask import jsonify
 import pandas as pd
 import csv
+import os
 from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -35,6 +36,8 @@ app = Flask(__name__)
 app.jinja_env.filters['regex'] = regex
 
 ## app.secret_key = b'_5#y2L"F4Q8z\n\xec]/''
+# get the current folder
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # autocomplete dict
 autocmplete_label_dict = {}
@@ -271,7 +274,7 @@ def search():
 def showSelection():
     # flash('RDF file successfully created')
     BMWD = Namespace('https://www.materials.fraunhofer.de/ontologies/BWMD_ontology/mid#')
-    UNIT = Namespace('http://qudt.org/2.1/vocab/unit/')
+    UNIT = Namespace('http://www.ontologyrepository.com/CommonCoreOntologies/Mid/InformationEntityOntology')#http://www.qudt.org/2.1/vocab/unit
     BS = Namespace('https://w3id.org/def/basicsemantics-owl#')
 
     g = Graph()
@@ -291,7 +294,7 @@ def showSelection():
             filter_data = [i for i in re.split("\s\s|;|\t", test) if i != '']
             print(filter_data)
             if len(filter_data) <= 2:
-                g.add((Literal(request.form.get("search" + str(i))), BS['hasValue'], Literal(filter_data[-1])))
+                g.add((BMWD[request.form.get("search" + str(i))], BS['hasValue'], Literal(filter_data[-1])))
             else:
                 if re.findall('[0-9]+', filter_data[1]):
                     g.add((BMWD[request.form.get("search" + str(i))], UNIT['hasUnit'], Literal(filter_data[2])))
@@ -319,6 +322,21 @@ def test_read():
             file_data.append(line)
     # some thing
     return render_template('regex_file.html', data=file_data[:30])
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    # set the target save path
+
+    for file in request.files.getlist("file"):
+        # get the filename
+        filename = file.filename
+        content = file.stream.read().decode("utf-8")
+        with open(content) as f:
+            print(f)
+        #target = "/".os.path.join(APP_ROOT, filename)
+        print(filename)
+        #print(target)
+    return "OK"
 
 
 if __name__ == '__main__':
