@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <title>basic sidebar menu</title>
+</head>
+<body>
+    <div id="app">
+
+        <!-- sidebar menu -->
+
+        <section class="sidebar-menu" v-bind:style='{"width" : (isActive ? "0" : "")}'>
+
+            <div class="form-ontology">
+                <h1>
+                    form ontology
+                </h1>
+            </div>
+
+            <div class="tripple-show">
+                <h1>tripple results</h1>
+            </div>
+            
+        </section>
+        <!-- main menu -->
+        <section class="main-menu" 
+        v-bind:style="[isActive? {'width': '100vw'} : {'width':'70vw'}]">
+            <nav>
+                <ul>
+                    <li>RDF-FRONTEND</li>
+                    <li><a href="#">Mat-o-lab</a> </li>
+                    <li><a href="#">BAM</a></li>
+                    <li><a href="#">Fraunhofer</a></li>
+                </ul>
+            </nav>
+            <h1>File preview</h1>
+            <div @click="toggleMenu" id="toggle-button">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit a quia quibusdam. Rerum voluptatibus quam dolorum molestias et? Veniam quam nisi consectetur eos enim nostrum id dolor aperiam corporis inventore!</p>
+            </div>
+
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isActive: true,
+            },
+            methods: {
+                toggleMenu() {
+                    this.isActive = !this.isActive
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>
