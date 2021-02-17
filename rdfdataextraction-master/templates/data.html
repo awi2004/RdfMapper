@@ -1,0 +1,99 @@
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script type="text/javascript">
+$(function () {
+    var autocompleteOptions = {
+        minLength: 2,
+        source:function(request, response) {
+            $.getJSON("/autocomplete",{
+                q: request.term, // in flask, "q" will be the argument to look for using request.args
+            }, function(data) {
+                response(data.matching_results); // matching_results from jsonify
+            });
+        }
+    };
+
+    function addInput() {
+        var $input = $("<input>", {
+            name: "search",
+            "class": "searchInput"
+        });
+        $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
+    };
+    console.log($("input.searchInput"))
+    $("input.searchInput").autocomplete(autocompleteOptions);
+
+});
+
+
+
+    </script>
+
+
+</head>
+
+
+<body>
+
+
+<div>
+
+    <form id="myForm" name="myForm" class="form-horizontal" method="post" action="/search">
+        <h2>Headers of the experimental data from Team Mechanik experiment</h2>
+        <h3>Please select the checkbox and a assign a label to the header.</h3>
+
+
+        {% for each in dropdown_list %}
+        <input type="checkbox" name="dropdown" value="{{each[0]}}">
+
+        <label>line {{loop.index}} value : </label>
+        <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
+               placeholder="choose a subject"/>
+        <input style="margin:2px;" name="{{ 'prop' + loop.index|string }}" class="searchInput"
+               placeholder="assign a property"/>
+        <!--<input style="margin:2px;" name="{{ 'search' + 'x' + loop.index|string }}" class="searchInput"
+               placeholder="assign a label"/>-->
+
+
+        {% for j in each %}
+        <label> &nbsp; {{j}}</label>
+        {% endfor %}
+        <br>
+
+        <!--        <input style="margin:2px;" id = "basics"/>-->
+
+
+        <br>
+
+        {% endfor %}
+
+        <h2>Data preview </h2>
+        {% for each in dropdown_list %}
+        {% for i in each %}
+        <label> &nbsp; {{i}}</label>
+        {% endfor %}
+        <br>
+        {% endfor %}
+
+        <br>
+
+        {% for table in tables %}
+
+        {{ table|safe }}
+        {% endfor %}
+
+        <p>After assigning label for each recorded experiment please select Submit button to create RDF triplets. </p>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>

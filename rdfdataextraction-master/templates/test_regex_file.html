@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>basic sidebar menu</title>
+</head>
+<body>
+    <div id="app">
+
+        <!-- sidebar menu -->
+
+        <section class="sidebar-menu" v-bind:style='{"width" : (isActive ? "0" : "")}'>
+
+            <div class="form-ontology">
+                <h1>
+                    form ontology
+                </h1>
+                <div v-show="true">
+                    <input type="text" name="input1">
+                    <input type="text" name="input2">
+                    <button type="submit">Submit</button>
+                </div>
+            </div>
+
+            <div class="tripple-show">
+                <h1>tripple results</h1>
+                {title}
+            </div>
+            
+        </section>
+        <!-- main menu -->
+        <section class="main-menu" 
+        v-bind:style="[isActive? {'width': '100vw'} : {'width':'70vw'}]"
+        >
+        <!-- navbar -->
+            <nav>
+                <ul>
+                    <li>RDF-FRONTEND</li>
+                    <li><a href="#">Mat-o-lab</a> </li>
+                    <li><a href="#">BAM</a></li>
+                    <li><a href="#">Fraunhofer</a></li>
+                </ul>
+            </nav>
+        <!--  -->
+            <h1>File preview</h1>
+            <form class="" action="/test_read" method="post">
+                <h2>Read Any File</h2>
+                <input type="file" name="upload-file">
+                <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
+                <input type="submit" name="" value="Show">
+            </form>
+            <div @click="toggleMenu" id="toggle-button">
+                <ul style="list-style-type: none;">
+                    <li 
+                        v-for="(value,index) in values"
+                        :key="index"
+                        v-on:click="toggleMenu(index)"
+                    >
+                    {value.value}
+                    
+                    </li>
+                </ul>
+    
+            </div>
+
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+
+    <script type="text/javascript">
+        let lineData = {{data|safe}}
+        let valuesObjectArray = []
+        if (lineData.length>1) {
+            for (i=0; i<lineData.length; i++) {
+                valuesObjectArray.push({
+                    opened: true,
+                    value: lineData[i]
+                })
+            }
+        } else {
+            valuesObjectArray.push({
+                    opened: true,
+                    value: 'no data to show yet!'
+                })
+        }
+        
+    </script>
+    <script>
+        var app = new Vue({
+            delimiters: ['{', '}'],
+            el: '#app',
+            data: {
+                isActive: true,
+                values: valuesObjectArray,
+                id: '',
+                title: ''
+            },
+            methods: {
+                toggleMenu(index) {
+                    this.id = index;
+                    this.title = this.values[index].value;
+                    this.values[index].opened = !this.values[index].opened
+                    this.isActive = this.values[index].opened;
+                    console.log(this.isActive)
+                    console.log('this is id ',this.id)
+                    console.log(this.values[index].opened)
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

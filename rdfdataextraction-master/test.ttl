@@ -1,0 +1,35 @@
+@prefix ns1: <http://www.w3.org/2002/07/owl#> .
+@prefix ns2: <https://w3id.org/def/basicsemantics-owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+"column 0" ns1:hasIndex 0 ;
+    ns1:hasLabel "Zeit" ;
+    ns1:hasUnit "(sec)" .
+
+"column 1" ns1:hasIndex 1 ;
+    ns1:hasLabel "Traversenweg" ;
+    ns1:hasUnit "(mm)" .
+
+"column 2" ns1:hasIndex 2 ;
+    ns1:hasLabel "Last" ;
+    ns1:hasUnit "(kN)" .
+
+"column 3" ns1:hasIndex 3 ;
+    ns1:hasLabel "Dehnung 1" ;
+    ns1:hasUnit "(%)" .
+
+"column 4" ns1:hasIndex 4 ;
+    ns1:hasLabel "Dehn-ung 2" ;
+    ns1:hasUnit "(%)" .
+
+"column 5" ns1:hasIndex 5 ;
+    ns1:hasLabel "Durchschnittliche Dehn-ung" ;
+    ns1:hasUnit "(%)" .
+
+"column 6" ns1:hasIndex 6 ;
+    ns1:hasLabel "Zugspannung" ;
+    ns1:hasUnit "(MPa)" .
+
+"mercury" ns2:berylium "Probenbeschriftung",
+        "RX5163DV" .
+

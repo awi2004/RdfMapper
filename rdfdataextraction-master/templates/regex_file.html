@@ -1,0 +1,96 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+
+
+{% block content %}
+<div class="app">
+
+    <!--{% for table in tables %}
+    {{titles[loop.index]}}
+    {{ table|safe }}
+    {% endfor %}-->
+    <form id="myForm" name="myForm" class="form-horizontal" method="post" action="/showSelection">
+        <h2>experimental data from Team Mechanik experiment</h2>
+        <h2>click on any of the row and assign labels</h2>
+        {% for each in data %}
+
+        {% if each|length >1 %}
+        <!--{% for i in each | regex %}
+        &nbsp; {{i}};
+        {% endfor %}-->
+        <label
+                id="{{ 'para' + loop.index|string }}" value="{{literal}}"
+                v-on:click="opened = !opened ">
+            {{each}}
+        </label>
+        <div v-show="opened"
+             class="{{ 'open' + loop.index|string }}">
+
+            <input type="checkbox" name="{{ 'dropdown' + loop.index|string }}" value="{{each}}">
+            <input style="margin:2px;" name="{{ 'search' + loop.index|string }}" class="searchInput"
+                   placeholder="choose a subject"/>
+
+        </div>
+        <br>
+        {% endif  %}
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+
+<script type="text/javascript">
+     new Vue({
+        el: '.app',
+
+        data: {
+            opened: false
+        }
+    })
+
+$(function () {
+    var autocompleteOptions = {
+        minLength: 2,
+        source:function(request, response) {
+            $.getJSON("/autocomplete",{
+                q: request.term, // in flask, "q" will be the argument to look for using request.args
+            }, function(data) {
+                response(data.matching_results); // matching_results from jsonify
+            });
+        }
+    };
+
+    function addInput() {
+
+        var $input = $("<input>", {
+            name: "search",
+            "class": "searchInput"
+        });
+        $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
+    };
+    console.log($("input.searchInput"))
+    $("input.searchInput").autocomplete(autocompleteOptions);
+
+});
+
+
+
+
+</script>
+
+{% endblock %}
