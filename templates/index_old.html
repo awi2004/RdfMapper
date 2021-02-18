@@ -1,44 +1,65 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav_style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
-    <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
-    <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
-
-    <style>
-            h1 {text-align: center;}
-            p {text-align: center;}
-            div {text-align: center;}
-
-    </style>
+    <!--<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+    <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">-->
 </head>
 <body>
-<h1>RDF widget</h1>
-<form class="" action="/rdf" method="post">
-    <h2>Read turtle</h2>
-    <input type="file" name="upload-file">
-    <input type="submit" name="" value="Submit">
-</form>
+    <div id="app">
 
-{% if alert_value == 1 %}
-<p>Ontology read done.</p>
-{% endif %}
-<form class="" action="/data" method="post">
-    <h2>Read CSV</h2>
-    <input type="file" name="upload-file">
-    <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
-    <input type="submit" name="" value="Show">
-</form>
+        <!--             v-bind:style="[isActive? {'width': '100vw'} : {'width':'70vw'}]>-->
+        <section class="main-menu">
+        <nav>
+            <ul>
+                <li>RDF-FRONTEND</li>
+                <li><a href="#">Mat-o-lab</a> </li>
+                <li><a href="#">BAM</a></li>
+                <li><a href="#">Fraunhofer</a></li>
+            </ul>
+        </nav>
 
-<form class="" action="/test_read" method="post">
-    <h2>Read Any File</h2>
-    <input type="file" name="upload-file">
-    <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
-    <input type="submit" name="" value="Show">
-</form>
+        <div>
+            <h1>RDF widget</h1>
+            <form class="" action="/rdf" method="post">
+                <h2>Read turtle</h2>
+                <input type="file" name="upload-file">
+                <input type="submit" name="" value="Submit">
+            </form>
 
-<form action="{{ url_for('upload') }}", method="POST" class="dropzone">
-     <input type="submit" name="" value="Done">
-</form>
+            {% if alert_value == 1 %}
+            <p>Ontology read done.</p>
+            {% endif %}
+            <!--<form class="" action="/data" method="post">
+                <h2>Read CSV</h2>
+                <input type="file" name="upload-file">
+                <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
+                <input type="submit" name="" value="Show">
+            </form>-->
+
+            <form class="" action="/read_files" method="post">
+                <h2>Read Any File</h2>
+                <input type="file" name="upload-file">
+                <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
+                <input type="submit" name="" value="Show">
+            </form>
+        </div>
 
 
+
+
+
+
+        <!--<form action="{{ url_for('upload') }}", method="POST" class="dropzone">
+             <input type="submit" name="" value="Done">
+        </form>-->
+</section>
+</div>
+</body>
+</html>

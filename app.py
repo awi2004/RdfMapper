@@ -71,8 +71,6 @@ def read_turte():
     file = request.form['upload-file']
     print(file)
     # no_of_rows = int(request.form['no_of_rows'])
-    # g = rdflib.Graph()
-    # g = ConjunctiveGraph()
     owlClass = rdflib.namespace.OWL.Class
     rdfType = rdflib.namespace.RDF.type
 
@@ -107,6 +105,10 @@ def index():
 
 @app.route('/file_read', methods=['GET', 'POST'])
 def file_read():
+    """
+    This is first landing page.
+    :return:
+    """
     return render_template('index_old.html')
 
 
@@ -167,6 +169,10 @@ def data():
 
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
+    """
+    This is autocomplete method.
+    :return:
+    """
     search = request.args.get('q')
     print(request.args.get('term'))
     print('search is ---------')
@@ -174,11 +180,8 @@ def autocomplete():
     autocomplete = AutoComplete(words=autocmplete_label_dict)
     print(autocomplete.search(word=str(search), max_cost=3, size=3))
     t = autocomplete.search(word=str(search), max_cost=3, size=6)
-
     flatten = [item for sublist in t for item in sublist]
     print(flatten)
-
-    # results = autocomplete.search(word=str(search), max_cost=3, size=3) #class_labels  # ['Beer', 'Wine', 'Soda', 'Juice', 'Water']
     results = flatten
     print(results)
 
@@ -221,14 +224,6 @@ def search():
                            rdflib.Literal(dictOfWordsFromCSV.get(class_labels[i])[1])))
             csv_graph.add((rdflib.Literal(request.form.get("search" + str(i + 1))), OWL.hasIdentifier,
                            rdflib.Literal(class_labels[i])))
-        # owl = OWL.str(request.form.get("prop1"))
-
-        # test graph add data request.form.get("search" + str(i + 1))
-        # csv_test_graph.add((rdflib.URIRef(request.form.get("search" + str(i + 1))),
-        #                     BS[request.form.get("prop" + str(i + 1))],
-        #                     rdflib.Literal(request.form.get("searchx" + str(
-        #                         i + 1)))))  # rdflib.RDF.type(str(request.form.get("prop" + str(i + 1))))
-
     for j in range(7):
         csv_graph.add((rdflib.Literal('column ' + str(j)), OWL.hasLabel,
                        rdflib.Literal(dictOfWordsHeaders[j][1])))
@@ -272,6 +267,10 @@ def search():
 @returns_rdf
 @custom_decorator
 def showSelection():
+    """
+    Creates rdf triples from slected values.
+    :return:
+    """
     # flash('RDF file successfully created')
     BMWD = Namespace('https://www.materials.fraunhofer.de/ontologies/BWMD_ontology/mid#')
     UNIT = Namespace('http://www.ontologyrepository.com/CommonCoreOntologies/Mid/InformationEntityOntology')#http://www.qudt.org/2.1/vocab/unit
@@ -309,8 +308,8 @@ def showSelection():
     return g
 
 
-@app.route('/test_read', methods=['GET', 'POST'])
-def test_read():
+@app.route('/read_files', methods=['GET', 'POST'])
+def read_files():
     # file to reads
     file = request.form['upload-file']
     no_of_lines = int(request.form['no_of_rows_csv'])
@@ -335,7 +334,7 @@ def upload():
             print(f)
         #target = "/".os.path.join(APP_ROOT, filename)
         print(filename)
-        #print(target)
+        #rint(target)p
     return "OK"
 
 
