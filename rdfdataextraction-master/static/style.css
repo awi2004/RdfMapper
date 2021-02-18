@@ -47,6 +47,11 @@ button {
   display: inline-block;
 }
 
+.sidebar-menu .form-ontology h1 {
+  color: #a0c4ff;
+  text-align: center;
+}
+
 .sidebar-menu .form-ontology input,
 label {
   margin: 5px;
@@ -87,6 +92,11 @@ label {
   vertical-align: top;
   padding: 5px;
 }
+
+.sidebar-menu .tripple-show h1 {
+  color: #ffadad;
+  text-align: center;
+}
 /* main menu css */
 .main-menu {
   width: 100vw;
@@ -100,6 +110,11 @@ label {
   border: 3px solid #fdffb6;
   box-sizing: border-box;
   /* margin-right: 50vw; */
+}
+
+.main-menu h1 {
+  color: #ebf13a;
+  text-align: center;
 }
 
 .main-menu #toggle-button {
@@ -146,5 +161,3 @@ label {
   float: left;
   padding: 1em;
 }
-
-
