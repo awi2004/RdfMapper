@@ -20,7 +20,6 @@ from wtforms import TextField, Form
 from fast_autocomplete import AutoComplete
 
 from collections import defaultdict
-import io
 import re
 
 
@@ -175,7 +174,7 @@ def autocomplete():
     """
     search = request.args.get('q')
     print(request.args.get('term'))
-    print('search is ---------')
+    print('search is -----------')
     print(str(search))
     autocomplete = AutoComplete(words=autocmplete_label_dict)
     print(autocomplete.search(word=str(search), max_cost=3, size=3))
@@ -320,7 +319,7 @@ def read_files():
         for line in f:
             file_data.append(line)
     # some thing
-    return render_template('regex_file.html', data=file_data[:30])
+    return render_template('regex_test.html', data=file_data[:30])
 
 @app.route('/upload', methods=['POST'])
 def upload():

@@ -5,14 +5,29 @@ body {
   font-family: sans-serif;
   display: inline-block;
   float: right;
+  background-color: #d8e2dc;
+  height: 100%;
 }
 
+input[type="text"] {
+  font-size: 1em;
+}
+
+button {
+  margin: 5px;
+  width: 25%;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+}
 /* sidebar menu css */
 
 .sidebar-menu {
   width: 27vw;
-  height: 100vh;
-  background-color: white;
+  height: 100%;
+  background-color: #d8e2dc;
   box-sizing: border-box;
   /* border: 5px solid red; */
   float: right;
@@ -24,60 +39,120 @@ body {
 
 .sidebar-menu .form-ontology {
   width: 100%;
-  height: 40%;
-  background-color: blue;
+  min-height: 50vh;
+  background-color: #d8e2dc;
+  border: 3px solid #a0c4ff;
   box-sizing: border-box;
   float: right;
   vertical-align: top;
   padding: 5px;
-  border: 0;
+  display: inline-block;
+}
+
+.sidebar-menu .form-ontology h1 {
+  color: #a0c4ff;
+  text-align: center;
+}
+
+.sidebar-menu .form-ontology input,
+label {
+  margin: 5px;
+  width: 80%;
+  height: 2.5em;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-out;
+}
+
+.sidebar-menu .form-ontology input:hover {
+  border: 3px solid blue;
+}
+.sidebar-menu .form-ontology .submit-btn {
+  margin: 5px;
+  width: 25%;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+  transition: all 0.5s ease-out;
+}
+
+.sidebar-menu .form-ontology .submit-btn:hover {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
 }
 
 .sidebar-menu .tripple-show {
   width: 100%;
-  height: 60%;
-  background-color: red;
+  min-height: 50vh;
+  background-color: #d8e2dc;
+  border: 3px solid #ffadad;
   box-sizing: border-box;
   float: right;
   vertical-align: top;
   padding: 5px;
-  border: 0;
+}
+
+.sidebar-menu .tripple-show h1 {
+  color: #ffadad;
+  text-align: center;
 }
 /* main menu css */
 .main-menu {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   position: relative;
-  background-color: lightyellow;
+  background-color: #d8e2dc;
   float: left;
   padding: 5em;
   box-sizing: border-box;
   transition: all 0.5s ease-out;
+  border: 3px solid #fdffb6;
+  box-sizing: border-box;
   /* margin-right: 50vw; */
+}
+
+.main-menu .list-item li {
+  margin: 1em;
+}
+
+.main-menu h1 {
+  color: #40916c;
+  text-align: center;
 }
 
 .main-menu #toggle-button {
   /* left: 85%; */
   /* margin-right: 100%; */
-  color: black;
+  /* color: black; */
   /* border: 0.1em solid #ffb703; */
   transition: all 0.5s ease-out;
 }
 .main-menu #toggle-button:hover {
   cursor: pointer;
-  color: #ffb703;
 }
 
 .main-menu nav {
   width: 100%;
   height: 3em;
-  background-color: lawngreen;
+  background-color: #70e000;
   color: white;
   margin: 0 !important;
   position: absolute;
   left: 0;
   top: 0;
   margin-left: 2em;
+}
+
+.main-menu nav img {
+  width: auto;
+  height: auto;
+  max-height: 3em;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .main-menu nav ul {
@@ -100,4 +175,31 @@ body {
   display: inline;
   float: left;
   padding: 1em;
+  margin-left: 2.5em;
+}
+
+.main-menu input {
+  margin: 5px;
+  width: 20%;
+  height: 2.5em;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-out;
+}
+
+.main-menu input[type="submit"] {
+  margin: 5px;
+  width: 5em;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+  transition: all 0.5s ease-out;
+}
+
+.main-menu input[type="submit"]:hover {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
 }
