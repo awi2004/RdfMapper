@@ -23,22 +23,46 @@
                     form ontology
                 </h1>
                 <div v-show="true" >
-                    <label for="input1">input1</label>
-                    <br>
-                    <input type="text" name="input1" :value="title">
-                    <br>
-                    <label for="input2">input2</label>
-                    <br>
-                    <input type="text" name="input2">
-                    <br>
-                    <input type="submit" name="show_tripple_submit" value="Submit" class="submit-btn">
-                    <!-- <button type="submit">Submit</button> -->
+                    <!-- <form action="#" name="tripple-form" method="POST" novalidate> -->
+                        <label for="input1">Subject/Class</label>
+                        <br>
+                        <input type="text" name="input1" :value="title" >
+                        <br>
+                        <label for="input2">Value</label>
+                        <br>
+                        <input type="text" name="input2" v-model="sub">
+                        <br>
+                        <input type="submit" name="showTripple" value="Submit" class="submit-btn" @click="onSubmit">
+                        <!-- <button type="submit">Submit</button> -->
+                    <!-- </form> -->
                 </div>
             </div>
 
             <div class="tripple-show">
                 <h1>tripple results</h1>
-                {title}
+                <!-- <table>
+                      <thead>
+                          <tr>
+                              {% for col in colnames %}
+                              <th>{{ col }}</th>
+                              {% endfor %}
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for record in records %}
+                          <tr>
+                              {% for col in colnames %}
+                              <td>{{ record[col] }}</td>
+                              {% endfor %}
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table> -->
+                  <div v-show="showRdf">
+                    <h2>You have created a RDF</h2>
+                    <p>Subject: {sub}</p>
+                    <p>Object: {obj}</p>
+                  </div>
             </div>
             
         </section>
@@ -57,7 +81,7 @@
             </nav>
         <!--  -->
             <h1>File preview</h1>
-            <form class="" action="/test_read" method="post">
+            <form name="read-file-form" action="/test_read" method="post">
                 <h2>Read Any File</h2>
                 <input type="file" name="upload-file">
                 <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
@@ -110,7 +134,11 @@
                 isActive: true,
                 values: valuesObjectArray,
                 id: '',
-                title: ''
+                title: '',
+                sub: '',
+                predicate: '',
+                obj: '',
+                showRdf: false
             },
             methods: {
                 toggleMenu(index) {
@@ -121,6 +149,10 @@
                     console.log(this.isActive)
                     console.log('this is id ',this.id)
                     console.log(this.values[index].opened)
+                },
+                onSubmit() {
+                    this.showRdf = true;
+                    this.obj = this.title
                 }
             }
         })

@@ -321,7 +321,12 @@ def test_read():
     g.namespace_manager.bind('unit', UNIT)
     g.namespace_manager.bind('bs', BS)
     g.namespace_manager.bind('bmwd', BMWD)
+
+    subjects = []
+    predicates = []
+    objects = []
     # file to reads
+    # readForm = 
 
     if request.method == 'POST':
         file = request.form['upload-file']
@@ -334,12 +339,45 @@ def test_read():
                 file_data.append(line)
         # some thing
         data=json.dumps(file_data[:30])
-        print(data)
+
+        # if request.method == 'POST' and request.form.get('showTripple') == 'Submit':
+        #     filter_data = request.form['input1']
+        #     filter_data = [i for i in re.split("\s\s|;|\t", test) if i != '']
+        #     if len(filter_data) <= 2:
+        #         g.add((BMWD[request.form.get('input2')], BS['hasValue'], Literal(filter_data[-1])))
+        #         subjects.append(request.form.get('input2'))
+        #         predicates.append('hasValue')
+        #         objects.append(filter_data[-1])
+        #     else:
+        #         if re.findall('[0-9]+', filter_data[1]):
+        #             g.add((BMWD[request.form.get('input2')], UNIT['hasUnit'], Literal(filter_data[2])))
+        #             subjects.append(request.form.get('input2'))
+        #             predicates.append('hasUnit')
+        #             objects.append(filter_data[2])
+
+        #             g.add((BMWD[request.form.get('input2')], BS['hasValue'], Literal(filter_data[1])))
+        #             subjects.append(request.form.get('input2'))
+        #             predicates.append('hasValue')
+        #             objects.append(filter_data[1])
+        #         else:
+        #             g.add((BMWD[request.form.get('input2')], BS['hasValue'], Literal(filter_data[2])))
+        #             subjects.append(request.form.get('input2'))
+        #             predicates.append('hasValue')
+        #             objects.append(filter_data[2])
+
+        #             g.add((BMWD[request.form.get('input2')], UNIT['hasUnit'], Literal(filter_data[1])))
+        #             subjects.append(request.form.get('input2'))
+        #             predicates.append('hasUnit')
+        #             objects.append(filter_data[1])
+
     else:
         file = ''
         no_of_lines = ''
         file_data = []
         data = []
+
+    # trippleDF = pd.DataFrame({'Subjects':subjects,'Predicates':predicates,'Objects':objects})
+    # , records = trippleDF.to_dict('records'), colnames=trippleDF.columns.values
     return render_template('test_regex_file.html', data=data)
 
 @app.route('/upload', methods=['POST'])
