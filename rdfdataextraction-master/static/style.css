@@ -5,6 +5,8 @@ body {
   font-family: sans-serif;
   display: inline-block;
   float: right;
+  background-color: #d8e2dc;
+  height: 100%;
 }
 
 input[type="text"] {
@@ -24,7 +26,7 @@ button {
 
 .sidebar-menu {
   width: 27vw;
-  height: 100vh;
+  height: 100%;
   background-color: #d8e2dc;
   box-sizing: border-box;
   /* border: 5px solid red; */
@@ -37,7 +39,7 @@ button {
 
 .sidebar-menu .form-ontology {
   width: 100%;
-  height: 50%;
+  min-height: 50vh;
   background-color: #d8e2dc;
   border: 3px solid #a0c4ff;
   box-sizing: border-box;
@@ -84,7 +86,7 @@ label {
 
 .sidebar-menu .tripple-show {
   width: 100%;
-  height: 50%;
+  min-height: 50vh;
   background-color: #d8e2dc;
   border: 3px solid #ffadad;
   box-sizing: border-box;
@@ -100,7 +102,7 @@ label {
 /* main menu css */
 .main-menu {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   position: relative;
   background-color: #d8e2dc;
   float: left;
@@ -110,6 +112,10 @@ label {
   border: 3px solid #fdffb6;
   box-sizing: border-box;
   /* margin-right: 50vw; */
+}
+
+.main-menu .list-item li {
+  margin: 1em;
 }
 
 .main-menu h1 {
