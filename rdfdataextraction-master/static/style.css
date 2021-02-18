@@ -7,6 +7,19 @@ body {
   float: right;
 }
 
+input[type="text"] {
+  font-size: 1em;
+}
+
+button {
+  margin: 5px;
+  width: 25%;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+}
 /* sidebar menu css */
 
 .sidebar-menu {
@@ -31,6 +44,37 @@ body {
   float: right;
   vertical-align: top;
   padding: 5px;
+  display: inline-block;
+}
+
+.sidebar-menu .form-ontology input,
+label {
+  margin: 5px;
+  width: 80%;
+  height: 2.5em;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-out;
+}
+
+.sidebar-menu .form-ontology input:hover {
+  border: 3px solid blue;
+}
+.sidebar-menu .form-ontology .submit-btn {
+  margin: 5px;
+  width: 25%;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+  transition: all 0.5s ease-out;
+}
+
+.sidebar-menu .form-ontology .submit-btn:hover {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
 }
 
 .sidebar-menu .tripple-show {
@@ -102,3 +146,5 @@ body {
   float: left;
   padding: 1em;
 }
+
+

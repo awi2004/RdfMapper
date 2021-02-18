@@ -312,7 +312,17 @@ def showSelection():
 
 @app.route('/test_read', methods=['GET', 'POST'])
 def test_read():
+    BMWD = Namespace('https://www.materials.fraunhofer.de/ontologies/BWMD_ontology/mid#')
+    UNIT = Namespace('http://www.ontologyrepository.com/CommonCoreOntologies/Mid/InformationEntityOntology')#http://www.qudt.org/2.1/vocab/unit
+    BS = Namespace('https://w3id.org/def/basicsemantics-owl#')
+
+    g = Graph()
+    g.namespace_manager = NamespaceManager(Graph())
+    g.namespace_manager.bind('unit', UNIT)
+    g.namespace_manager.bind('bs', BS)
+    g.namespace_manager.bind('bmwd', BMWD)
     # file to reads
+
     if request.method == 'POST':
         file = request.form['upload-file']
         no_of_lines = int(request.form['no_of_rows_csv'])
@@ -350,3 +360,4 @@ def upload():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

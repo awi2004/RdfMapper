@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style.css') }}">
     <title>basic sidebar menu</title>
 </head>
@@ -21,10 +21,17 @@
                 <h1>
                     form ontology
                 </h1>
-                <div v-show="true">
-                    <input type="text" name="input1">
+                <div v-show="true" >
+                    <label for="input1">input1</label>
+                    <br>
+                    <input type="text" name="input1" :value="title">
+                    <br>
+                    <label for="input2">input2</label>
+                    <br>
                     <input type="text" name="input2">
-                    <button type="submit">Submit</button>
+                    <br>
+                    <input type="submit" name="show_tripple_submit" value="Submit" class="submit-btn">
+                    <!-- <button type="submit">Submit</button> -->
                 </div>
             </div>
 
@@ -41,10 +48,10 @@
         <!-- navbar -->
             <nav>
                 <ul>
-                    <li>RDF-FRONTEND</li>
-                    <li><a href="#">Mat-o-lab</a> </li>
-                    <li><a href="#">BAM</a></li>
-                    <li><a href="#">Fraunhofer</a></li>
+                    <li><strong>RDF-FRONTEND</strong></li>
+                    <li><a href="#"><strong>Mat-o-lab</strong></a> </li>
+                    <li><a href="https://www.bam.de/Navigation/DE/Home/home.html" target="_blank"><strong>BAM</strong></a></li>
+                    <li><a href="https://www.imws.fraunhofer.de/" target="_blank"><strong>Fraunhofer</strong></a></li>
                 </ul>
             </nav>
         <!--  -->
@@ -53,14 +60,16 @@
                 <h2>Read Any File</h2>
                 <input type="file" name="upload-file">
                 <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
-                <input type="submit" name="" value="Show">
+                <input type="submit" name="read_file_submit" value="Show">
             </form>
-            <div @click="toggleMenu" id="toggle-button">
+            <div id="toggle-button">
                 <ul style="list-style-type: none;">
                     <li 
                         v-for="(value,index) in values"
                         :key="index"
                         v-on:click="toggleMenu(index)"
+                       
+                        v-bind:style='[value.opened? {"background-color": "#d8e2dc"}:{"background-color": "#e9c46a"}]'
                     >
                     {value.value}
                     
@@ -118,3 +127,4 @@
 
 </body>
 </html>
+
