@@ -113,7 +113,7 @@ label {
 }
 
 .main-menu h1 {
-  color: #ebf13a;
+  color: #74c69d;
   text-align: center;
 }
 
@@ -140,6 +140,15 @@ label {
   margin-left: 2em;
 }
 
+.main-menu nav img {
+  width: auto;
+  height: auto;
+  max-height: 3em;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 .main-menu nav ul {
   list-style-type: none;
   margin: 0;
@@ -160,4 +169,5 @@ label {
   display: inline;
   float: left;
   padding: 1em;
+  margin-left: 2.5em;
 }
