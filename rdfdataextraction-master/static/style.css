@@ -171,3 +171,29 @@ label {
   padding: 1em;
   margin-left: 2.5em;
 }
+
+.main-menu input {
+  margin: 5px;
+  width: 20%;
+  height: 2.5em;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-out;
+}
+
+.main-menu input[type="submit"] {
+  margin: 5px;
+  width: 5em;
+  border: 3px solid #767d81;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: white;
+  transition: all 0.5s ease-out;
+}
+
+.main-menu input[type="submit"]:hover {
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+}

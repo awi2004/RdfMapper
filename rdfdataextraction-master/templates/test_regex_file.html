@@ -84,7 +84,7 @@
             <h1>File preview</h1>
             <form name="read-file-form" action="/test_read" method="post">
                 <h2>Read Any File</h2>
-                <input type="file" name="upload-file">
+                <input type="file" name="upload-file" id="upload-input">
                 <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
                 <input type="submit" name="read_file_submit" value="Show">
             </form>
@@ -113,12 +113,19 @@
         let lineData = {{data|safe}}
         let valuesObjectArray = []
         if (lineData.length>1) {
+ 
             for (i=0; i<lineData.length; i++) {
-                valuesObjectArray.push({
-                    opened: true,
-                    value: lineData[i]
-                })
+                if (!lineData[i] || !lineData[i].trim() || lineData[i].includes('-')) {
+                    console.log('not data')
+                } else {
+                    valuesObjectArray.push({
+                        opened: true,
+                        value: lineData[i]
+                    })
+                }
+                
             }
+            
         } else {
             valuesObjectArray.push({
                     opened: true,
@@ -147,9 +154,7 @@
                     this.title = this.values[index].value;
                     this.values[index].opened = !this.values[index].opened
                     this.isActive = this.values[index].opened;
-                    console.log(this.isActive)
-                    console.log('this is id ',this.id)
-                    console.log(this.values[index].opened)
+                    
                 },
                 onSubmit() {
                     this.showRdf = true;
