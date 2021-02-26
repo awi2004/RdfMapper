@@ -1,0 +1,58 @@
+
+
+
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"  href="static/rdf_ui/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <!--<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+    <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">-->
+</head>
+
+
+<body>
+    <div id="app">
+
+        <!--             v-bind:style="[isActive? {'width': '100vw'} : {'width':'70vw'}]>-->
+        <section class="main-menu">
+        <nav>
+            <ul>
+                <li>RDF-FRONTEND</li>
+                <li><a href="#">Mat-o-lab</a> </li>
+                <li><a href="#">BAM</a></li>
+                <li><a href="#">Fraunhofer</a></li>
+            </ul>
+        </nav>
+
+        <div>
+            <h1>RDF widget</h1>
+            <form class = "" enctype="multipart/form-data" action="/rdf" method="post">
+                <h2>Read turtle</h2>
+                <input type="file" name="file">
+                <input type="submit" name="" value="Submit">
+            </form>
+
+            <form enctype="multipart/form-data" action="/parse_data" method="post">
+                <h2>Read Any File</h2>
+                <input type="file" name="file">
+                <input type="number" name="no_of_rows_csv" placeholder="no of lines to show"/>
+                <input type="submit" name="" value="Show">
+            </form>
+        </div>
+
+
+
+
+
+
+</section>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css"  href="static/rdf_ui/style.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+
+
+<body>
+    <div id="app">
+
+    <section class="sidebar-menu" v-bind:style='{"width" : (isActive ? "0" : "")}'>
+
+            <div class="form-ontology" >
+                <h1>
+                    form ontology
+                </h1>
+                <div v-show="true" >
+                    <!-- <form action="#" name="tripple-form" method="POST" novalidate> -->
+                        <label for="input1">Subject/Class</label>
+                        <br>
+                        <input type="text" name="input1" :value="title" >
+                        <br>
+                        <label for="input2">Value</label>
+                        <br>
+                        <input  name="input2" v-model="sub" class="searchInput" >
+                        <br>
+                        <input type="submit" name="showTripple" value="Submit" class="submit-btn" @click="onSubmit">
+                        <!-- <button type="submit">Submit</button> -->
+                    <!-- </form> -->
+                </div>
+            </div>
+
+            <div class="tripple-show">
+                <h1>tripple results</h1>
+                  <div v-show="showRdf">
+                    <h2>You have created a RDF</h2>
+                    <p>Subject: {sub}</p>
+                    <p>Object: {obj}</p>
+                  </div>
+            </div>
+
+        </section>
+        <!-- main menu -->
+        <section class="main-menu"
+        v-bind:style="[isActive? {'width': '100vw'} : {'width':'70vw'}]"
+        >
+        <!-- navbar -->
+            <nav>
+                <ul>
+                    <li><strong>RDF-FRONTEND</strong></li>
+                    <li><img src="static/images/logo.png" alt=""></li>
+                    <li><a href="#"><strong>Mat-o-lab</strong></a> </li>
+                    <li><a href="https://www.bam.de/Navigation/DE/Home/home.html" target="_blank"><strong>BAM</strong></a></li>
+                    <li><a href="https://www.imws.fraunhofer.de/" target="_blank"><strong>Fraunhofer</strong></a></li>
+                </ul>
+            </nav>
+        <!--  -->
+            <h1>File preview</h1>
+
+            <div id="toggle-button">
+                <ul style="list-style-type: none;" class="list-item">
+                    <li
+                        v-for="(value,index) in values"
+                        :key="index"
+                        v-on:click="toggleMenu(index)"
+
+                        v-bind:style='[value.opened? {"background-color": "#d8e2dc"}:{"background-color": "#e9c46a"}]'
+                    >
+                    {value.value}
+
+                    </li>
+                </ul>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        let lineData = {{file_data|safe}}
+        let valuesObjectArray = []
+
+
+        for (i=0; i<lineData.length; i++) {
+
+                valuesObjectArray.push({
+                    opened: true,
+                    value: lineData[i]
+                })
+        }
+
+
+
+    </script>
+    <script>
+        var app = new Vue({
+            delimiters: ['{', '}'],
+            el: '#app',
+            data: {
+                isActive: true,
+                values: valuesObjectArray,
+                id: '',
+                title: '',
+                sub: '',
+                predicate: '',
+                obj: '',
+                showRdf: false
+            },
+            methods: {
+                toggleMenu(index) {
+                    this.id = index;
+                    var my_array = this.values[index].value.split(" ");
+                    this.title = my_array[my_array.length - 1];
+                    this.values[index].opened = !this.values[index].opened
+                    this.isActive = this.values[index].opened;
+
+                },
+                onSubmit() {
+                    this.showRdf = true;
+                    this.obj = this.title;
+
+
+                }
+            }
+        })
+
+        $(function () {
+            var autocompleteOptions = {
+                minLength: 2,
+                source:function(request, response) {
+                    $.getJSON("/autocomplete",{
+                        q: request.term, // in flask, "q" will be the argument to look for using request.args
+                    }, function(data) {
+                        response(data.matching_results); // matching_results from jsonify
+                    });
+                }
+            };
+
+            function addInput() {
+
+                var $input = $("<input>", {
+                    name: "input2",
+                    "class": "searchInput"
+                });
+                $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
+            };
+
+            var text = $("input.searchInput").autocomplete(autocompleteOptions);
+            console.log($("searchInput"));
+            console.log(text);
+            });
+   </script>
+</body>
+
