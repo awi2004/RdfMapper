@@ -99,6 +99,10 @@ label {
   color: #ffadad;
   text-align: center;
 }
+
+.sidebar-menu .tripple-show table, th, td{
+  border: 1px solid black;
+}
 /* main menu css */
 .main-menu {
   width: 100vw;

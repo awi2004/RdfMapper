@@ -15,17 +15,21 @@
 <body>
     <div id="app">
 
+
+
     <section class="sidebar-menu" v-bind:style='{"width" : (isActive ? "0" : "")}'>
 
             <div class="form-ontology" >
+
                 <h1>
                     form ontology
                 </h1>
                 <div v-show="true" >
+
                     <!-- <form action="#" name="tripple-form" method="POST" novalidate> -->
                         <label for="input1">Subject/Class</label>
                         <br>
-                        <input type="text" name="input1" :value="title" >
+                        <input type="text" name="input1" :value="title">
                         <br>
                         <label for="input2">Value</label>
                         <br>
@@ -33,17 +37,46 @@
                         <br>
                         <input type="submit" name="showTripple" value="Submit" class="submit-btn" @click="onSubmit">
                         <!-- <button type="submit">Submit</button> -->
+
                     <!-- </form> -->
                 </div>
+
             </div>
 
             <div class="tripple-show">
+                <form id="tripple" name="tripple" class="form-horizontal" method="post" action="/selection">
                 <h1>tripple results</h1>
                   <div v-show="showRdf">
                     <h2>You have created a RDF</h2>
-                    <p>Subject: {sub}</p>
-                    <p>Object: {obj}</p>
+                      <table>
+                          <tr>
+                              <th>
+                                Subject
+                              </th>
+                              <th>
+                                  Object
+                              </th>
+                          </tr>
+                          <tr v-for = "(s,i) in list_sub" :key="i">
+                              <td>
+                                  {s}
+                              </td>
+                              <td>
+                                  {list_obj[i]}
+                              </td>
+                          </tr>
+                      </table>
+
+                    <!--<label id ="sub" name="sub">Subject: {sub}</label>
+                    <label  class="btn btn-secondary" for="obj">Object: {obj}</label>-->
+                      <!--<label name = "list_obj">list_obj: {list_obj}</label>
+                      <p>list_sub: {list_sub}</p>-->
+                      <input type="hidden" name="test2" :value="list_sub">
+                      <input type="hidden" name="test1" :value="list_obj">
+
                   </div>
+                <input type="submit" name="results" value="Submit" >
+                </form>
             </div>
 
         </section>
@@ -116,26 +149,35 @@
                 sub: '',
                 predicate: '',
                 obj: '',
-                showRdf: false
+                showRdf: false,
+                list_sub: [],
+                list_obj:[],
+                lis_title: ''
+
             },
             methods: {
                 toggleMenu(index) {
                     this.id = index;
-                    var my_array = this.values[index].value.split(" ");
-                    this.title = my_array[my_array.length - 1];
+                    var my_array = this.values[index].value
+                    this.title =  my_array.split(/[;]+/).filter(Boolean)+";";
                     this.values[index].opened = !this.values[index].opened
                     this.isActive = this.values[index].opened;
+                    this.lis_title = this.values[index].value;
+
 
                 },
                 onSubmit() {
                     this.showRdf = true;
                     this.obj = this.title;
-
+                    this.sub= document.getElementsByClassName("searchInput")[0].value;
+                    this.list_obj.push(this.title);
+                    this.list_sub.push(document.getElementsByClassName("searchInput")[0].value);
 
                 }
             }
         })
-
+        var text;
+        var inp;
         $(function () {
             var autocompleteOptions = {
                 minLength: 2,
@@ -154,13 +196,18 @@
                     name: "input2",
                     "class": "searchInput"
                 });
-                $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
+                inp= $input.appendTo("form#myForm").focus().autocomplete(autocompleteOptions);
             };
 
-            var text = $("input.searchInput").autocomplete(autocompleteOptions);
+            text = $("input.searchInput").autocomplete(autocompleteOptions);
+
             console.log($("searchInput"));
-            console.log(text);
+
+
             });
+
+            console.log(text)
+
    </script>
 </body>
 
