@@ -27,11 +27,11 @@
                 <div v-show="true" >
 
                     <!-- <form action="#" name="tripple-form" method="POST" novalidate> -->
-                        <label for="input1">Subject/Class</label>
+                        <label for="input1">Values</label>
                         <br>
                         <input type="text" name="input1" :value="title">
                         <br>
-                        <label for="input2">Value</label>
+                        <label for="input2">Subject/Class</label>
                         <br>
                         <input  name="input2" v-model="sub" class="searchInput" >
                         <br>
@@ -125,6 +125,9 @@
         let lineData = {{file_data|safe}}
         let valuesObjectArray = []
 
+        let headers = {{file_data|safe}}
+        let headersArray = []
+
 
         for (i=0; i<lineData.length; i++) {
 
@@ -134,6 +137,14 @@
                 })
         }
 
+
+        for (i=0; i<headers.length; i++) {
+
+                        headersArray.push({
+                            opened: true,
+                            headers_value: headers[i]
+                        })
+                }
 
 
     </script>

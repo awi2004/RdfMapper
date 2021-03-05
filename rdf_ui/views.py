@@ -1,25 +1,16 @@
-import locale
-from collections import defaultdict
-
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from fast_autocomplete import AutoComplete
 from django.http import JsonResponse
-import rdflib
-import pandas as pd
+from pathlib import Path
 import re
 import chardet
 
 import rdflib
 import pandas as pd
-from flask_rdf.bottle import returns_rdf
 from rdflib.namespace import RDF, XSD, NamespaceManager
 from rdflib import BNode, Literal, Namespace, Graph
-import flask_rdf
-import csv
-import os
-from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 
 # autocomplete dict
 autocmplete_label_dict = {}
@@ -28,14 +19,10 @@ class_labels_dict = {}
 dictOfWordsFromCSV = {}
 dictOfWordsHeaders = []
 listOfWordsHeaders = []
-# set up a custom formatter to return turtle in text/plain to browsers
-custom_formatter = flask_rdf.FormatSelector()
-custom_formatter.wildcard_mimetype = 'text/plain'
-custom_formatter.add_format('text/plain', 'turtle')
-custom_decorator = flask_rdf.flask.Decorator(custom_formatter)
+
 
 # define graph
-g = rdflib.Graph()
+g = Graph()
 
 
 def regex(str):
@@ -78,15 +65,23 @@ def parse_data(request):
         # print(line.decode('ISO-8859-1'))
         # file_data.append(line.decode('ISO-8859-1'))
         filtered_data = regex(line.decode('ISO-8859-1'))
+        headers = []
         if len(filtered_data) > 0:
             # filter_data = [i for i in re.split("\s\s|;|\t", tt) if i != '']
             # print("".join([i for i in filtered_data]))
+            s = "".join([i for i in filtered_data])
+            if re.match("[0-9,]+$", s):
+                # head_counts.append(filtered_data.index())
+                headers.append(s)
+
             file_data.append(" ".join([i for i in filtered_data]))
         # print(chardet.detect(line))
         # print(line.decode('ISO-8859-1'))
+        print(headers[:10])
+        context = {"file_data": file_data[:int(request.POST['no_of_rows_csv'])], "headers": headers}
         if not line:
             break
-    return render(request, 'regex_file.html', {"file_data": file_data[:int(request.POST['no_of_rows_csv'])]})
+    return render(request, 'regex_file.html', context)  # {
 
 
 @csrf_exempt
@@ -96,7 +91,6 @@ def autocomplete(request):
     :return:
     """
     search = request.GET.get('q')
-    # print(request.GET.get('term'))
     print('search is -----------')
     print(str(search))
     auto_complete = AutoComplete(words=autocmplete_label_dict)
@@ -121,7 +115,7 @@ def read_turte(request):
     # no_of_rows = int(request.form['no_of_rows'])
     owlClass = rdflib.namespace.OWL.Class
     rdfType = rdflib.namespace.RDF.type
-
+    g = Graph()
     result = g.parse(file, format="turtle")
     final_list = []
     for s in result.subjects(predicate=rdfType, object=owlClass):
@@ -131,27 +125,19 @@ def read_turte(request):
         class_labels_dict[result.label(s).title()] = s.title()
     labels = list(set([i for i in final_list if len(i[1]) > 0]))
     print(len(labels))
-    # print(class_labels_dict)
     print(class_labels_dict.get('Computertomograph'))
-    # print(class_labels_dict.get('DepthOfCut'))
     rdf_df = pd.DataFrame(labels, columns=['class(subject)', 'label(literals)'])
     alert_value = 1  # for alert.
     return render(request, 'index.html')
-    # render('turtle_list.html', {'tables': [rdf_df.to_html(classes='data')], 'titles': rdf_df.columns.values})
-    # render_template('index_old.html', alert_value=alert_value)
 
 
 @csrf_exempt
 def selection(request):
-    print("----------Show----------------")
-    # input1= request.GET.get('obj')
-    # print(input1)
     BMWD = Namespace('https://www.materials.fraunhofer.de/ontologies/BWMD_ontology/mid#')
     UNIT = Namespace(
         'http://www.ontologyrepository.com/CommonCoreOntologies/Mid/InformationEntityOntology')  # http://www.qudt.org/2.1/vocab/unit
     BS = Namespace('https://w3id.org/def/basicsemantics-owl#')
 
-    g = Graph()
     g.namespace_manager = NamespaceManager(Graph())
     g.namespace_manager.bind('unit', UNIT)
     g.namespace_manager.bind('bs', BS)
@@ -168,7 +154,7 @@ def selection(request):
         filter_data = test[i].split(" ")
         print("data is ", filter_data)
         # print("filter_data is ",filter_data)
-        if len(filter_data) > 0 and len(filter_data[0])>0:
+        if len(filter_data) > 0 and len(filter_data[0]) > 0:
             if len(filter_data) <= 2:
                 print(filter_data)
                 g.add((BMWD[objects[i]], BS['hasValue'], Literal(filter_data[-1])))
@@ -182,6 +168,15 @@ def selection(request):
 
             # print(len([i for i in b if i != '']))
     print(g.serialize(format="turtle").decode())
-    results= g.serialize(format="turtle").decode()
-    return  render(request, 'graph.html', {'results': results})
-        #JsonResponse({'matching_results': g.serialize(format="turtle").decode()})
+
+    results = g.serialize(format="turtle").decode()
+    return render(request, 'graph.html', {'results': results})
+    # JsonResponse({'matching_results': g.serialize(format="turtle").decode()})
+
+
+@csrf_exempt
+def save(request):
+    downloads_path = str(Path.home() / "Downloads")
+    file_to_save = downloads_path + "/test.ttl"
+    g.serialize(file_to_save, format="turtle")
+    return HttpResponse("File saved in download folder.")

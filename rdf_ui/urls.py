@@ -25,4 +25,5 @@ urlpatterns = [
     path('rdf', views.read_turte, name='read_turte'),
     path('autocomplete', views.autocomplete, name='autocomplete'),
     path('selection', views.selection, name='selection'),
+    path('save', views.save, name='save'),
 ]
